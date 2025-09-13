@@ -67,7 +67,7 @@ export default function LoginScreen() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <Image
-          source={require("/Users/anjana.mahasathian/Downloads/quantity_plan_app_for_media_issue-main/assets/images/astiro-logo.jpg")}
+          source={require("assets/images/astiro-logo.jpg")}
           style={styles.logo}
           resizeMode="contain"
           accessible
