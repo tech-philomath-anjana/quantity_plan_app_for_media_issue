@@ -13,47 +13,42 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
+import { useAuth } from "../context/AuthContext";
 
-/**
- * - KeyboardAvoidingView keeps inputs visible when keyboard opens
- * - SafeAreaView ensures content doesn't overlap notches
- * - Inputs are responsive (width: "100%") so layout works across devices
- */
 export default function LoginScreen() {
+  const { signIn } = useAuth();
+
+  // Form state
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  // UI state
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Called when the user taps the Login button (or submits password).
   const handleLogin = async () => {
-    setIsLoading(true);
-    setErrorMessage("");
+    // Prevent empty fields
+    if (!username.trim() || !password) {
+      setErrorMessage("Please enter username and password.");
+      return;
+    }
 
-    const apiUrl = "http://13.126.182.69/api/login";
-    const secretNote = {
-      email: username, // Use username state for the email key
-      password: password,
-    };
+    setErrorMessage("");
+    setIsLoading(true);
 
     try {
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(secretNote),
-      });
+      // Call sign-in function from context
+      const result = await signIn(username.trim(), password);
 
-      const reply = await response.json();
-
-      if (response.ok && reply.success) {
-        Alert.alert("Success!", "You are now logged in.");
-        // TODO: Navigate to the next screen
+      if (!result.success) {
+        // Auth failed (wrong credentials or server returned error)
+        setErrorMessage(result.message || "Invalid username or password.");
       } else {
-        setErrorMessage(reply.message || "Invalid username or password.");
+        // Auth success
+        Alert.alert("Success!", "You are now logged in.");
       }
-    } catch (error) {
+    } catch (err) {
+      // Network/server issue
       setErrorMessage("Could not connect to the server.");
     } finally {
       setIsLoading(false);
@@ -66,16 +61,16 @@ export default function LoginScreen() {
         style={styles.container}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
+        {/* Logo */}
         <Image
-          source={require("assets/images/astiro-logo.jpg")}
+          source={require("../../assets/images/astiro-logo.jpg")}
           style={styles.logo}
           resizeMode="contain"
-          accessible
-          accessibilityLabel="App Logo"
         />
 
         <Text style={styles.title}>Login</Text>
 
+        {/* Username input */}
         <TextInput
           style={styles.input}
           placeholder="Username"
@@ -83,10 +78,10 @@ export default function LoginScreen() {
           value={username}
           onChangeText={setUsername}
           autoCapitalize="none"
-          autoCorrect={false}
-          returnKeyType="next"
+          keyboardType="email-address"
         />
 
+        {/* Password input */}
         <TextInput
           style={styles.input}
           placeholder="Password"
@@ -95,16 +90,15 @@ export default function LoginScreen() {
           onChangeText={setPassword}
           secureTextEntry
           autoCapitalize="none"
-          autoCorrect={false}
-          returnKeyType="done"
           onSubmitEditing={handleLogin}
         />
 
-        {/* Show error message and spinner/button */}
+        {/* Error message */}
         {errorMessage ? (
           <Text style={styles.errorText}>{errorMessage}</Text>
         ) : null}
 
+        {/* Show spinner while logging in, else show login button */}
         {isLoading ? (
           <ActivityIndicator size="large" color="#1873FF" style={{ marginTop: 8 }} />
         ) : (
@@ -112,8 +106,6 @@ export default function LoginScreen() {
             style={styles.loginButton}
             onPress={handleLogin}
             activeOpacity={0.8}
-            accessibilityRole="button"
-            accessibilityLabel="Login"
           >
             <Text style={styles.loginText}>Login</Text>
           </TouchableOpacity>
@@ -123,6 +115,7 @@ export default function LoginScreen() {
   );
 }
 
+// Styles
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
@@ -170,9 +163,10 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   errorText: {
-    color: 'red',
-    textAlign: 'center',
+    color: "red",
+    textAlign: "center",
     marginBottom: 10,
-    fontWeight: '600'
+    fontWeight: "600",
   },
 });
+
