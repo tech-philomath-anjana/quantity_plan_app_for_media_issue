@@ -1,7 +1,6 @@
 // Quantity Planning screen
 // - Small, focused form to pick Media Product, Publication Date and Phase
 // - Uses a simple modal list picker for selections
-// Comments kept minimal and purposeful.
 
 import React, { useState } from "react";
 import {
