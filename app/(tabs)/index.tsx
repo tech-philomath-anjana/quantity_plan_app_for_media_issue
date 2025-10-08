@@ -1,4 +1,4 @@
-// LoginScreen
+// LoginScreen.js
 import React, { useState } from "react";
 import {
   View,
@@ -11,46 +11,51 @@ import {
   Image,
   SafeAreaView,
   ActivityIndicator,
-  Alert,
 } from "react-native";
 import { useAuth } from "../context/AuthContext";
 
 export default function LoginScreen() {
   const { signIn } = useAuth();
 
-  // Form state
+  // Form input state
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  // UI state
+  // UI and feedback state
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  /**
+   * Handle the login button press
+   * - Validates input
+   * - Calls the signIn method from AuthContext
+   * - Manages loading and error feedback
+   */
   const handleLogin = async () => {
-    // Prevent empty fields
-    if (!username.trim() || !password) {
-      setErrorMessage("Please enter username and password.");
+    // Basic input validation
+    if (!username.trim() || !password.trim()) {
+      setErrorMessage("Please enter your username and password.");
       return;
     }
 
+    // Reset error message and show loading spinner
     setErrorMessage("");
     setIsLoading(true);
 
     try {
-      // Call sign-in function from context
+      // Attempt to sign in via AuthContext
       const result = await signIn(username.trim(), password);
 
       if (!result.success) {
-        // Auth failed (wrong credentials or server returned error)
+        // Sign-in failed (invalid credentials or server error)
         setErrorMessage(result.message || "Invalid username or password.");
-      } else {
-        // Auth success
-        Alert.alert("Success!", "You are now logged in.");
       }
-    } catch (err) {
-      // Network/server issue
-      setErrorMessage("Could not connect to the server.");
+    } catch (error) {
+      // Catch network or unexpected issues
+      console.error("Login error:", error);
+      setErrorMessage("Unable to connect to the server. Please try again later.");
     } finally {
+      // Always stop the loading spinner
       setIsLoading(false);
     }
   };
@@ -61,7 +66,7 @@ export default function LoginScreen() {
         style={styles.container}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        {/* Logo */}
+        {/* App logo */}
         <Image
           source={require("../../assets/images/astiro-logo.jpg")}
           style={styles.logo}
@@ -70,7 +75,7 @@ export default function LoginScreen() {
 
         <Text style={styles.title}>Login</Text>
 
-        {/* Username input */}
+        {/* Username Field */}
         <TextInput
           style={styles.input}
           placeholder="Username"
@@ -79,9 +84,10 @@ export default function LoginScreen() {
           onChangeText={setUsername}
           autoCapitalize="none"
           keyboardType="email-address"
+          returnKeyType="next"
         />
 
-        {/* Password input */}
+        {/* Password Field */}
         <TextInput
           style={styles.input}
           placeholder="Password"
@@ -91,14 +97,15 @@ export default function LoginScreen() {
           secureTextEntry
           autoCapitalize="none"
           onSubmitEditing={handleLogin}
+          returnKeyType="done"
         />
 
-        {/* Error message */}
+        {/* Display an error message, if any */}
         {errorMessage ? (
           <Text style={styles.errorText}>{errorMessage}</Text>
         ) : null}
 
-        {/* Show spinner while logging in, else show login button */}
+        {/* Show loading spinner or login button */}
         {isLoading ? (
           <ActivityIndicator size="large" color="#1873FF" style={{ marginTop: 8 }} />
         ) : (
@@ -115,7 +122,7 @@ export default function LoginScreen() {
   );
 }
 
-// Styles
+// --- Styles ---
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
@@ -128,14 +135,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   logo: {
-    width: 250,
+    width: 240,
     height: 120,
-    marginBottom: 20,
+    marginBottom: 24,
   },
   title: {
     fontSize: 32,
     fontWeight: "700",
     marginBottom: 24,
+    color: "#000",
   },
   input: {
     width: "100%",
@@ -151,7 +159,7 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: 420,
     height: 50,
-    backgroundColor: "rgba(24,115,255,1)",
+    backgroundColor: "#1873FF",
     borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
@@ -169,4 +177,3 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 });
-
