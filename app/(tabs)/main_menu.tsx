@@ -1,7 +1,11 @@
 /**
  * Main Menu Screen
- * - Shows the user profile in the top-right
- * - Displays one action button: "Quantity Planning"
+ * 
+ * Displays:
+ * - User profile avatar in the top-right corner
+ * - A single button for "Quantity Planning"
+ * 
+ * This serves as the entry point for navigation within the app.
  */
 
 import React from "react";
@@ -12,28 +16,37 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
+  View,
 } from "react-native";
 import { useRouter } from "expo-router";
 
-// Components are colocated under /app/components
+// Local component (lives under /app/components)
 import UserProfile from "../components/UserProfile";
 
 export default function MainMenuScreen() {
   const router = useRouter();
 
   return (
-    <SafeAreaView style={styles.safe}>
-      {/* User profile shortcut (top-right corner UI handled in UserProfile itself) */}
-      <UserProfile />
+    <SafeAreaView style={styles.safeArea}>
+      {/* --- Header Section --- */}
+      <View style={styles.header}>
+        {/* Placeholder on the left keeps layout balanced */}
+        <View style={styles.headerSpacer} />
 
-      {/* Main content is centered; shifts up when keyboard is open */}
+        {/* Profile avatar sits on the right */}
+        <View style={styles.profileContainer}>
+          <UserProfile />
+        </View>
+      </View>
+
+      {/* --- Main Content --- */}
       <KeyboardAvoidingView
-        style={styles.container}
+        style={styles.content}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <Text style={styles.title}>Main Menu</Text>
 
-        {/* Only available menu option for now */}
+        {/* Currently only one available action */}
         <TouchableOpacity
           style={styles.button}
           onPress={() => router.push("/quantity_planning")}
@@ -49,11 +62,32 @@ export default function MainMenuScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: {
+  safeArea: {
     flex: 1,
     backgroundColor: "#fff",
   },
-  container: {
+
+  // --- Header / Top Bar ---
+  header: {
+    height: 56,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 12,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: "#eee", // subtle divider
+  },
+  headerSpacer: {
+    width: 44, // keeps symmetry with profile container
+  },
+  profileContainer: {
+    width: 44,
+    alignItems: "flex-end",
+    justifyContent: "center",
+  },
+
+  // --- Main Content ---
+  content: {
     flex: 1,
     paddingHorizontal: 20,
     alignItems: "center",
@@ -63,16 +97,24 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: "700",
     marginBottom: 24,
+    color: "#000",
   },
+
+  // --- Button ---
   button: {
     width: "100%",
-    maxWidth: 420, // keeps button from stretching too wide on tablets
+    maxWidth: 420, // prevents full-width stretch on tablets
     height: 50,
-    backgroundColor: "rgba(24,115,255,1)", // app primary blue
+    backgroundColor: "#1873FF", // app primary blue
     borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
     marginTop: 8,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 3, // subtle Android shadow
   },
   buttonText: {
     color: "#fff",
