@@ -53,3 +53,4 @@ export default function InactivityHandler({ children }: { children: React.ReactN
 
   return <>{children}</>;
 }
+
