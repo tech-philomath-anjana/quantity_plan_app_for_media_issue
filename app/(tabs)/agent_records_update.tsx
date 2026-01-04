@@ -138,6 +138,8 @@ export default function AgentRecordsUpdate() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product_code, publication_date, contract_no, item_no, params.delivery_qty]);
 
+  const isPreFreeze = statusLabel.toLowerCase().includes("pre freeze");
+
   // ---------------------------------------------------------------------------
   // Simple validator for numeric text inputs. Accepts an empty string (so the user can clear),
   // or an integer (optionally negative). We keep the same behaviour as original code.
@@ -359,13 +361,16 @@ export default function AgentRecordsUpdate() {
             <View style={styles.compactGroup}>
               <Text style={styles.fieldLabel}>Base Supply</Text>
               <TextInput
-                keyboardType="numeric"
-                value={baseSupply}
-                onChangeText={(v) => validateNumberInput(v) && setBaseSupply(v)}
-                style={styles.compactInput}
-                placeholder="0"
-                placeholderTextColor="#7a7a7a"
-              />
+              keyboardType="numeric"
+              value={baseSupply}
+              editable={!isPreFreeze}
+              style={[
+                styles.compactInput,
+                isPreFreeze && { backgroundColor: "#e5e7eb" }
+              ]}
+              onChangeText={(v) => validateNumberInput(v) && setBaseSupply(v)}
+              placeholder="0"
+            />
             </View>
 
             <View style={styles.compactGroup}>
@@ -383,37 +388,48 @@ export default function AgentRecordsUpdate() {
             <View style={styles.compactGroup}>
               <Text style={styles.fieldLabel}>Days Figure</Text>
               <TextInput
-                keyboardType="numeric"
-                value={daysFigure}
-                onChangeText={(v) => validateNumberInput(v) && setDaysFigure(v)}
-                style={styles.compactInput}
-                placeholder="0"
-                placeholderTextColor="#7a7a7a"
-              />
+              keyboardType="numeric"
+              value={daysFigure}
+              editable={!isPreFreeze}
+              style={[
+                styles.compactInput,
+                isPreFreeze && { backgroundColor: "#e5e7eb" }
+              ]}
+              onChangeText={(v) => validateNumberInput(v) && setDaysFigure(v)}
+              placeholder="0"
+            />
             </View>
 
             <View style={styles.compactGroup}>
               <Text style={styles.fieldLabel}>Extra Quantity</Text>
               <TextInput
-                keyboardType="numeric"
-                value={extraQuantity}
-                onChangeText={(v) => validateNumberInput(v) && setExtraQuantity(v)}
-                style={styles.compactInput}
-                placeholder="0"
-                placeholderTextColor="#7a7a7a"
-              />
+              keyboardType="numeric"
+              value={extraQuantity}
+              editable={!isPreFreeze}
+              style={[
+                styles.compactInput,
+                isPreFreeze && { backgroundColor: "#e5e7eb" }
+              ]}
+              onChangeText={(v) => validateNumberInput(v) && setExtraQuantity(v)}
+              placeholder="0"
+            />
             </View>
 
             <View style={[styles.compactGroup, { marginTop: 8 }]}> 
               <Text style={styles.fieldLabel}>Delivery Quantity</Text>
               <TextInput
-                keyboardType="numeric"
-                value={deliveryQuantity}
-                onChangeText={(v) => validateNumberInput(v) && setDeliveryQuantity(v)}
-                style={[styles.compactInput, styles.deliveryInput]}
-                placeholder="0"
-                placeholderTextColor="#7a7a7a"
-              />
+              keyboardType="numeric"
+              value={deliveryQuantity}
+              editable={!isPreFreeze}
+              style={[
+                styles.compactInput,
+                styles.deliveryInput,
+                isPreFreeze && { backgroundColor: "#e5e7eb" }
+              ]}
+              onChangeText={(v) => validateNumberInput(v) && setDeliveryQuantity(v)}
+              placeholder="0"
+            />
+
             </View>
 
             {/* Primary action button: Update */}

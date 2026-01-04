@@ -20,6 +20,7 @@ import { useRouter } from "expo-router";
 import dayjs from "dayjs";
 import * as SecureStore from "expo-secure-store";
 import UserProfile from "../components/UserProfile";
+import { Calendar } from "react-native-calendars";
 
 /* ------------------------------------------------------------------
    API + token helpers
@@ -286,35 +287,54 @@ export default function QuantityPlanning() {
       );
     }
 
-    if (activeModal === "date") {
-      // date picker shows the temporary date; only commit when user presses Done
-      const initial = tempDate ?? (publicationDate ? new Date(publicationDate) : new Date());
-      return (
-        <View>
-          <View style={[styles.calendarContainer, { transform: [{ scale: calendarScale }] }]}>
-            <DateTimePicker
-              value={initial}
-              mode="date"
-              display={Platform.select({ ios: "inline", android: "calendar" })}
-              onChange={(_: DateTimePickerEvent, date?: Date) => {
-                if (date) setTempDate(date);
-              }}
-            />
-          </View>
+if (activeModal === "date") {
+  return (
+    <View>
+      <Calendar
+        current={publicationDate ?? dayjs().format("YYYY-MM-DD")}
 
-          <TouchableOpacity
-            style={[styles.goButton, { marginTop: 12 }]}
-            onPress={() => {
-              const d = tempDate ?? new Date();
-              setPublicationDate(dayjs(d).format("YYYY-MM-DD"));
-              setModalVisible(false);
-            }}
-          >
-            <Text style={styles.goButtonText}>Done</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
+        // 🔹 ALLOW viewing past dates
+        minDate={undefined}   // IMPORTANT: do NOT set minDate
+
+        // 🔹 Allow month scrolling
+        pastScrollRange={24}  // see 2 years back
+        futureScrollRange={12}
+
+        // 🔹 Allow selecting any date (past or future)
+        onDayPress={(day) => {
+          setPublicationDate(day.dateString);
+        }}
+
+        markedDates={{
+          [publicationDate ?? ""]: {
+            selected: true,
+            selectedColor: "#0b64ff",
+          },
+        }}
+
+        theme={{
+          backgroundColor: "#fff",
+          calendarBackground: "#fff",
+          textSectionTitleColor: "#444",
+          dayTextColor: "#111",
+          todayTextColor: "#0b64ff",
+          selectedDayTextColor: "#fff",
+          monthTextColor: "#111",
+          arrowColor: "#0b64ff",
+        }}
+      />
+
+      <TouchableOpacity
+        style={[styles.goButton, { marginTop: 12 }]}
+        onPress={() => setModalVisible(false)}
+      >
+        <Text style={styles.goButtonText}>Done</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+
 
     if (activeModal === "phase") {
       // currently only one phase exists in the app; kept flexible for future phases
