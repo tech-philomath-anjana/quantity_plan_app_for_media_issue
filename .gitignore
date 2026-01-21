@@ -17,6 +17,7 @@ expo-env.d.ts
 *.p12
 *.key
 *.mobileprovision
+android/local.properties
 
 # Metro
 .metro-health-check*
@@ -30,6 +31,8 @@ yarn-error.*
 .DS_Store
 *.pem
 
+# build artifacts
+app.apk
 # local env files
 .env*.local
 

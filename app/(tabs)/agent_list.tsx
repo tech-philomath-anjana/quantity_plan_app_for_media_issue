@@ -78,7 +78,7 @@ export default function AgentListScreen(): JSX.Element {
 
         const payload = { product_code: filterProduct, publication_date: filterDate, phase_no: filterPhase };
         // Helpful log for debugging (kept from original).
-        // eslint-disable-next-line no-console
+  // eslint-disable-next-line no-console
         console.log("POST /mobapp_get_detail_view", payload);
 
         const res = await authFetch(`${API_BASE}/mobapp_get_detail_view`, {
