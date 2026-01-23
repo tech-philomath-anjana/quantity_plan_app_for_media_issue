@@ -16,8 +16,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { useAuth } from "../context/AuthContext";
-import { API_BASE } from "../config";
+import { useAuth } from "../../src/context/AuthContext";
+import { API_BASE } from "../../src/config";
 import UserProfile from "../components/UserProfile";
 
 /**
@@ -128,7 +128,6 @@ export default function AgentRecordsUpdate() {
         }
       } catch (err) {
         // keep a console warning to assist debugging in development
-        // eslint-disable-next-line no-console
         console.warn("prefetch detail failed", err);
       } finally {
         setLoading(false);
@@ -217,7 +216,9 @@ export default function AgentRecordsUpdate() {
       includeQuantity1: false,
 
       // who updated this row — try to be flexible with user object shape
-      updated_by: (user && (user.id ?? (user.userId ?? (user.user_id ?? 0)))) ?? 0,
+      // User shape can vary; defensively read possible keys without type errors.
+      updated_by:
+        (user as any)?.id ?? (user as any)?.userId ?? (user as any)?.user_id ?? 0,
     };
 
     // include phase_no only if present in either user input or fullDetail
@@ -250,7 +251,6 @@ export default function AgentRecordsUpdate() {
       }
     } catch (err) {
       // network / unexpected error
-      // eslint-disable-next-line no-console
       console.error("Save error", err);
       Alert.alert("Network error", "Couldn't save. Please check your connection.");
     } finally {
@@ -299,7 +299,6 @@ export default function AgentRecordsUpdate() {
         Alert.alert("No data", "Detail API returned no data.");
       }
     } catch (err) {
-      // eslint-disable-next-line no-console
       console.warn("modal fetch failed", err);
       Alert.alert("Error", "Failed to fetch details.");
     } finally {

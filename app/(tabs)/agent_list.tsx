@@ -14,8 +14,8 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import { useAuth } from "../context/AuthContext";
-import { API_BASE } from "../config";
+import { useAuth } from "../../src/context/AuthContext";
+import { API_BASE } from "../../src/config";
 import UserProfile from "../components/UserProfile";
 
 // A single row returned by the server for the agent/detail list.
@@ -77,8 +77,7 @@ export default function AgentListScreen(): JSX.Element {
         }
 
         const payload = { product_code: filterProduct, publication_date: filterDate, phase_no: filterPhase };
-        // Helpful log for debugging (kept from original).
-  // eslint-disable-next-line no-console
+    // Helpful log for debugging (kept from original).
         console.log("POST /mobapp_get_detail_view", payload);
 
         const res = await authFetch(`${API_BASE}/mobapp_get_detail_view`, {

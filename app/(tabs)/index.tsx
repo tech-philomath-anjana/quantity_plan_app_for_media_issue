@@ -12,7 +12,7 @@ import {
   SafeAreaView,
   ActivityIndicator,
 } from "react-native";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../src/context/AuthContext";
 
 export default function LoginScreen() {
   const { signIn } = useAuth();

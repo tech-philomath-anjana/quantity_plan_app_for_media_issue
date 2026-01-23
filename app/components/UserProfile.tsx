@@ -10,7 +10,7 @@ import {
   Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../src/context/AuthContext";
 
 /**
  * Simple profile / menu component:

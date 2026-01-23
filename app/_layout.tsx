@@ -5,7 +5,7 @@
 
 import React from "react";
 import { Stack } from "expo-router";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider } from "../src/context/AuthContext";
 import InactivityHandler from "./components/InactivityHandler";
 
 export default function RootLayout() {

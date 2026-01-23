@@ -6,7 +6,7 @@
 
 import React, { useEffect, useRef } from "react";
 import { AppState, AppStateStatus } from "react-native";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../src/context/AuthContext";
 
 const INACTIVITY_MS = 60 * 60 * 1000; // 60 minutes
 
